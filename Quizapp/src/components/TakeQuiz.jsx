@@ -13,7 +13,169 @@ const Takequiz = () => {
 
   useEffect(() => {
     const savedQuizzes = JSON.parse(localStorage.getItem("quizzes") || "[]");
-    setQuizzes(savedQuizzes);
+    
+    // Pre-made quizzes
+    const preMadeQuizzes = [
+      {
+        title: "C Programming Fundamentals",
+        timeLimit: 10,
+        questions: [
+          {
+            question: "Which of the following is the correct way to declare a variable in C?",
+            options: ["int x;", "variable int x;", "declare int x;", "x int;"],
+            correctAnswer: 0
+          },
+          {
+            question: "What is the output of printf('%d', 5/2) in C?",
+            options: ["2.5", "2", "3", "Error"],
+            correctAnswer: 1
+          },
+          {
+            question: "Which header file is required for using printf() function?",
+            options: ["<stdlib.h>", "<string.h>", "<stdio.h>", "<math.h>"],
+            correctAnswer: 2
+          },
+          {
+            question: "What does the '&' operator do in C?",
+            options: ["Logical AND", "Bitwise AND", "Address of operator", "Both B and C"],
+            correctAnswer: 3
+          },
+          {
+            question: "Which of the following is NOT a valid C data type?",
+            options: ["int", "float", "string", "char"],
+            correctAnswer: 2
+          }
+        ]
+      },
+      {
+        title: "Python Programming Basics",
+        timeLimit: 10,
+        questions: [
+          {
+            question: "Which of the following is used to define a function in Python?",
+            options: ["function", "def", "define", "func"],
+            correctAnswer: 1
+          },
+          {
+            question: "What is the output of print(type([1, 2, 3]))?",
+            options: ["<class 'list'>", "<class 'array'>", "<class 'tuple'>", "<class 'dict'>"],
+            correctAnswer: 0
+          },
+          {
+            question: "Which operator is used for floor division in Python?",
+            options: ["/", "//", "%", "**"],
+            correctAnswer: 1
+          },
+          {
+            question: "How do you create a comment in Python?",
+            options: ["// comment", "/* comment */", "# comment", "<!-- comment -->"],
+            correctAnswer: 2
+          },
+          {
+            question: "What is the correct way to create a list in Python?",
+            options: ["list = (1, 2, 3)", "list = [1, 2, 3]", "list = {1, 2, 3}", "list = <1, 2, 3>"],
+            correctAnswer: 1
+          }
+        ]
+      },
+      {
+        title: "Java Programming Essentials",
+        timeLimit: 10,
+        questions: [
+          {
+            question: "Which of the following is the correct way to create an object in Java?",
+            options: ["MyClass obj = new MyClass();", "MyClass obj = MyClass();", "new MyClass obj;", "create MyClass obj;"],
+            correctAnswer: 0
+          },
+          {
+            question: "What is the main method signature in Java?",
+            options: ["public static void main(String args)", "public static void main(String[] args)", "static public void main(String[] args)", "Both B and C"],
+            correctAnswer: 3
+          },
+          {
+            question: "Which keyword is used for inheritance in Java?",
+            options: ["inherits", "extends", "implements", "super"],
+            correctAnswer: 1
+          },
+          {
+            question: "What is the size of int data type in Java?",
+            options: ["16 bits", "32 bits", "64 bits", "Depends on platform"],
+            correctAnswer: 1
+          },
+          {
+            question: "Which of the following is NOT an access modifier in Java?",
+            options: ["public", "private", "protected", "package"],
+            correctAnswer: 3
+          }
+        ]
+      },
+      {
+        title: "React.js Fundamentals",
+        timeLimit: 10,
+        questions: [
+          {
+            question: "What is JSX in React?",
+            options: ["JavaScript XML", "Java Syntax Extension", "JSON XML", "JavaScript Extension"],
+            correctAnswer: 0
+          },
+          {
+            question: "Which method is used to render a React component?",
+            options: ["render()", "display()", "show()", "mount()"],
+            correctAnswer: 0
+          },
+          {
+            question: "What is the correct way to pass props to a component?",
+            options: ["<Component props={value}>", "<Component value={props}>", "<Component prop=value>", "<Component prop={value}>"],
+            correctAnswer: 3
+          },
+          {
+            question: "Which hook is used for managing state in functional components?",
+            options: ["useEffect", "useState", "useContext", "useReducer"],
+            correctAnswer: 1
+          },
+          {
+            question: "What is the virtual DOM in React?",
+            options: ["Real DOM copy", "JavaScript representation of DOM", "CSS representation", "HTML template"],
+            correctAnswer: 1
+          }
+        ]
+      },
+      {
+        title: "HTML & Web Development",
+        timeLimit: 10,
+        questions: [
+          {
+            question: "Which HTML tag is used to create a hyperlink?",
+            options: ["<link>", "<href>", "<a>", "<url>"],
+            correctAnswer: 2
+          },
+          {
+            question: "What does HTML stand for?",
+            options: ["Hyper Text Markup Language", "High Tech Modern Language", "Home Tool Markup Language", "Hyperlink and Text Markup Language"],
+            correctAnswer: 0
+          },
+          {
+            question: "Which attribute is used to specify the URL of a link?",
+            options: ["src", "href", "link", "url"],
+            correctAnswer: 1
+          },
+          {
+            question: "Which HTML tag is used to display an image?",
+            options: ["<image>", "<img>", "<pic>", "<src>"],
+            correctAnswer: 1
+          },
+          {
+            question: "What is the correct HTML tag for the largest heading?",
+            options: ["<h6>", "<heading>", "<h1>", "<head>"],
+            correctAnswer: 2
+          }
+        ]
+      }
+    ];
+    
+    // Combine saved quizzes with pre-made quizzes
+    const allQuizzes = [...preMadeQuizzes, ...savedQuizzes];
+    setQuizzes(allQuizzes);
   }, []);
 
   // Timer
