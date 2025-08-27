@@ -56,7 +56,7 @@ const CreateQuiz = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen  bg-blue-200  py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <div className="bg-white shadow-sm border border-gray-200 rounded-lg overflow-hidden">
           <div className="bg-white border-b border-gray-200 px-6 py-4">

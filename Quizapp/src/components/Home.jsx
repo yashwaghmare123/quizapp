@@ -19,7 +19,7 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center">
+    <div className="min-h-screen bg-blue-200 flex items-center">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full">
         {/* Hero Section */}
         <motion.div 

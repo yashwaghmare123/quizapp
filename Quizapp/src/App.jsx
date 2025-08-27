@@ -5,12 +5,12 @@ import Navbar from "./components/Navbar";
 import Home from "./components/Home";
 import Aiquiz from'./components/Aiquiz'
 import CreateQuiz from "./components/CreateQuiz";
-import Takequiz from "./components/Takequiz";
+import Takequiz from "./components/TakeQuiz";
 
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-blue-100">
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />

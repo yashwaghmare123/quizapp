@@ -29,7 +29,7 @@ const CircularProgress = ({ percentage, size = 160, strokeWidth = 8 }) => {
   const colors = getColors();
 
   return (
-    <div className="relative inline-flex items-center justify-center">
+    <div className="relative inline-flex items-center justify-center  bg-blue-200 ">
       <svg
         width={size}
         height={size}
@@ -152,10 +152,10 @@ const SubmitQuiz = ({ selectedQuiz, answers }) => {
       {/* Full Width Header */}
       <div className="bg-gradient-to-r px-6 py-10">
   <div className="max-w-7xl mx-auto text-center">
-    <h2 className="text-3xl font-bold text-gray-900 mb-3">
+    <h2 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent mb-3">
       Quiz Completed!
     </h2>
-    <p className="text-lg text-gray-700">{selectedQuiz.title}</p>
+    <p className="text-lg bg-gradient-to-r from-pink-400 via-orange-500 to-yellow-500 bg-clip-text text-transparent font-semibold">{selectedQuiz.title}</p>
   </div>
       </div>
 

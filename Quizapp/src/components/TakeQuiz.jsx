@@ -238,10 +238,10 @@ const Takequiz = () => {
 
   if (!isQuizStarted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-12 px-6">
+      <div className="min-h-screen  py-12 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h1 className="text-4xl font-bold text-gray-900">
+            <h1 className="text-4xl font-bold text-blue-900">
               Available Quizzes
             </h1>
             <p className="mt-3 text-lg text-gray-600">

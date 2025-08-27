@@ -29,7 +29,7 @@ const CircularProgress = ({ percentage, size = 160, strokeWidth = 8 }) => {
   const colors = getColors();
 
   return (
-    <div className="relative inline-flex items-center justify-center">
+    <div className="relative inline-flex items-center justify-center  ">
       <svg
         width={size}
         height={size}
@@ -150,7 +150,7 @@ const AIQuiz = () => {
   // --- Initial Screen ---
   if (!quiz && !showResult) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <div className="min-h-screen  bg-blue-200  flex items-center justify-center px-4">
         <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-8 w-full max-w-md">
           <div className="text-center mb-6">
             <div className="w-16 h-16 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
@@ -180,34 +180,30 @@ const AIQuiz = () => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Number of Questions
               </label>
-              <select
+              <input
                 value={numQuestions}
                 onChange={(e) => setNumQuestions(Number(e.target.value))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
-              >
-                <option value={5}>5 Questions</option>
-                <option value={10}>10 Questions</option>
-                <option value={15}>15 Questions</option>
-                <option value={20}>20 Questions</option>
-              </select>
+                type="number"
+                placeholder="Enter number of questions"
+              />
+                
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Time Limit (seconds)
-              </label>
-              <select
-                value={timeInterval}
-                onChange={(e) => setTimeInterval(Number(e.target.value))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
-              >
-                <option value={30}>30 seconds</option>
-                <option value={60}>1 minute</option>
-                <option value={120}>2 minutes</option>
-                <option value={300}>5 minutes</option>
-                <option value={600}>10 minutes</option>
-              </select>
-            </div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    Time Limit (minutes)
+  </label>
+  <input
+    type="number"
+    value={timeInterval / 60}
+    onChange={(e) => setTimeInterval(Number(e.target.value) * 60)}
+    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
+    min="0.5"
+    step="0.5"
+    placeholder="Enter time in minutes"
+  />
+</div>
 
             <button
               onClick={generateQuiz}
