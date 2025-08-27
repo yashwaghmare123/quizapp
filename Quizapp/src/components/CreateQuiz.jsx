@@ -56,37 +56,38 @@ const CreateQuiz = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          <div className="bg-gradient-to-r from-blue-600 to-blue-800 px-6 py-4">
-            <h1 className="text-2xl font-bold text-white">Create New Quiz</h1>
+    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-white shadow-sm border border-gray-200 rounded-lg overflow-hidden">
+          <div className="bg-white border-b border-gray-200 px-6 py-4">
+            <h1 className="text-2xl font-semibold text-gray-900">Create New Quiz</h1>
+            <p className="mt-1 text-sm text-gray-600">Design your quiz with custom questions and answers</p>
           </div>
           
-          <form onSubmit={handleSubmit} className="p-6 space-y-8">
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <form onSubmit={handleSubmit} className="p-6 space-y-6">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Quiz Title
                 </label>
                 <input
                   type="text"
                   value={quizData.title}
                   onChange={(e) => setQuizData({ ...quizData, title: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Enter quiz title"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Time Limit (minutes)
                 </label>
                 <input
                   type="number"
                   value={quizData.timeLimit}
                   onChange={(e) => setQuizData({ ...quizData, timeLimit: parseInt(e.target.value) })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                   required
                   min="1"
                 />
@@ -95,59 +96,66 @@ const CreateQuiz = () => {
 
             <div className="space-y-6">
               {quizData.questions.map((question, qIndex) => (
-                <div key={qIndex} className="bg-gray-50 rounded-lg p-6 relative">
-                  <div className="absolute top-4 right-4 space-x-2">
+                <div key={qIndex} className="border border-gray-200 rounded-md p-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-medium text-gray-900">Question {qIndex + 1}</h3>
                     {quizData.questions.length > 1 && (
                       <button
                         type="button"
                         onClick={() => removeQuestion(qIndex)}
-                        className="text-red-600 hover:text-red-800 transition-colors duration-200"
+                        className="text-red-600 hover:text-red-800 text-sm"
                       >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                        </svg>
+                        Remove
                       </button>
                     )}
                   </div>
                   
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Question {qIndex + 1}</h3>
-                  
                   <div className="space-y-4">
-                    <input
-                      type="text"
-                      value={question.question}
-                      onChange={(e) => handleQuestionChange(qIndex, 'question', e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
-                      placeholder="Enter your question"
-                      required
-                    />
-
-                    <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                      {question.options.map((option, oIndex) => (
-                        <div key={oIndex} className="flex items-center space-x-2">
-                          <span className="flex-shrink-0 w-6 h-6 flex items-center justify-center bg-blue-100 text-blue-800 rounded-full font-medium text-sm">
-                            {String.fromCharCode(65 + oIndex)}
-                          </span>
-                          <input
-                            type="text"
-                            value={option}
-                            onChange={(e) => handleQuestionChange(qIndex, 'option', [oIndex, e.target.value])}
-                            className="flex-grow px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
-                            placeholder={`Option ${oIndex + 1}`}
-                            required
-                          />
-                        </div>
-                      ))}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Question Text
+                      </label>
+                      <textarea
+                        value={question.question}
+                        onChange={(e) => handleQuestionChange(qIndex, 'question', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                        placeholder="Enter your question"
+                        rows={3}
+                        required
+                      />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-gray-700 mb-3">
+                        Answer Options
+                      </label>
+                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                        {question.options.map((option, oIndex) => (
+                          <div key={oIndex} className="flex items-center space-x-3">
+                            <span className="flex-shrink-0 w-6 h-6 flex items-center justify-center bg-gray-100 text-gray-700 rounded-full font-medium text-sm">
+                              {String.fromCharCode(65 + oIndex)}
+                            </span>
+                            <input
+                              type="text"
+                              value={option}
+                              onChange={(e) => handleQuestionChange(qIndex, 'option', [oIndex, e.target.value])}
+                              className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                              placeholder={`Option ${oIndex + 1}`}
+                              required
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
                         Correct Answer
                       </label>
                       <select
                         value={question.correctAnswer}
                         onChange={(e) => handleQuestionChange(qIndex, 'correctAnswer', parseInt(e.target.value))}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                         required
                       >
                         {question.options.map((_, index) => (
@@ -162,21 +170,21 @@ const CreateQuiz = () => {
               ))}
             </div>
 
-            <div className="flex items-center justify-between pt-6 border-t border-gray-200">
+            <div className="flex flex-col sm:flex-row justify-between gap-4 pt-6 border-t border-gray-200">
               <button
                 type="button"
                 onClick={addQuestion}
-                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200"
+                className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
                 Add Question
               </button>
               
               <button
                 type="submit"
-                className="inline-flex items-center px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                className="inline-flex items-center justify-center px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
               >
                 Create Quiz
               </button>

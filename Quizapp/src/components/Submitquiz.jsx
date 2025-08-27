@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 const SubmitQuiz = ({ selectedQuiz, answers }) => {
   const navigate = useNavigate();
 
-  // Calculate score
   const score = answers.reduce((total, answer, index) => {
     if (answer === selectedQuiz.questions[index].correctAnswer) {
       return total + 1;
@@ -12,7 +11,6 @@ const SubmitQuiz = ({ selectedQuiz, answers }) => {
     return total;
   }, 0);
 
-  // Store result in localStorage
   useEffect(() => {
     const results = JSON.parse(localStorage.getItem('quizResults') || '[]');
     results.push({
@@ -28,7 +26,7 @@ const SubmitQuiz = ({ selectedQuiz, answers }) => {
   const getGrade = () => {
     if (percentage >= 90) return ['A+', 'Outstanding!', 'text-green-600'];
     if (percentage >= 80) return ['A', 'Excellent work!', 'text-green-600'];
-    if (percentage >= 70) return ['B', 'Good job!', 'text-blue-600'];
+    if (percentage >= 70) return ['B', 'Good !', 'text-blue-600'];
     if (percentage >= 60) return ['C', 'Keep practicing!', 'text-yellow-600'];
     if (percentage >= 50) return ['D', 'Need improvement', 'text-red-600'];
     if(percentage<35) return['F','Failed','text-red-600'];
