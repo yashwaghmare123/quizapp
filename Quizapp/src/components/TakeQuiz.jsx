@@ -10,6 +10,8 @@ const Takequiz = () => {
   const [timeLeft, setTimeLeft] = useState(0);
   const [isQuizStarted, setIsQuizStarted] = useState(false);
   const [showResult, setShowResult] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertQuizIndex, setAlertQuizIndex] = useState(null);
 
   useEffect(() => {
     const savedQuizzes = JSON.parse(localStorage.getItem("quizzes") || "[]");
@@ -232,6 +234,35 @@ const Takequiz = () => {
     return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
+  const handleDeleteQuiz = (index) => {
+    setAlertQuizIndex(index);
+    setShowAlert(true);
+  };
+
+  const confirmDelete = () => {
+    if (alertQuizIndex !== null) {
+      // Only delete custom quizzes (saved ones), not pre-made ones
+      if (alertQuizIndex >= 5) { // Pre-made quizzes are first 5
+        const customQuizIndex = alertQuizIndex - 5;
+        const savedQuizzes = JSON.parse(localStorage.getItem("quizzes") || "[]");
+        savedQuizzes.splice(customQuizIndex, 1);
+        localStorage.setItem("quizzes", JSON.stringify(savedQuizzes));
+        
+        // Update quizzes state
+        const updatedQuizzes = [...quizzes];
+        updatedQuizzes.splice(alertQuizIndex, 1);
+        setQuizzes(updatedQuizzes);
+      }
+    }
+    setShowAlert(false);
+    setAlertQuizIndex(null);
+  };
+
+  const cancelDelete = () => {
+    setShowAlert(false);
+    setAlertQuizIndex(null);
+  };
+
   if (showResult) {
     return <SubmitQuiz selectedQuiz={selectedQuiz} answers={answers} />;
   }
@@ -279,8 +310,18 @@ const Takequiz = () => {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: index * 0.1 }}
-                  className="bg-white rounded-2xl shadow hover:shadow-lg transition-all duration-300"
+                  className="bg-white rounded-2xl shadow hover:shadow-lg transition-all duration-300 relative"
                 >
+                  {index >= 5 && (
+                    <button
+                      onClick={() => handleDeleteQuiz(index)}
+                      className="absolute top-3 right-3 w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
+                  )}
                   <div className="p-6">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4 line-clamp-2">
                       {quiz.title}
@@ -303,6 +344,45 @@ const Takequiz = () => {
             </div>
           )}
         </div>
+
+        {/* Delete Confirmation Alert */}
+        {showAlert && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-white rounded-lg p-6 max-w-sm w-full mx-4"
+            >
+              <div className="text-center">
+                <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Delete Quiz
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  Are you sure you want to delete this quiz? This action cannot be undone.
+                </p>
+                <div className="flex space-x-3">
+                  <button
+                    onClick={cancelDelete}
+                    className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={confirmDelete}
+                    className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
       </div>
     );
   }
