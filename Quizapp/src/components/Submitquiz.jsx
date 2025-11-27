@@ -73,6 +73,11 @@ const CircularProgress = ({ percentage, size = 160, strokeWidth = 8 }) => {
 
 const SubmitQuiz = ({ selectedQuiz, answers }) => {
   const navigate = useNavigate();
+  const [isEmailSending, setIsEmailSending] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
+  const [studentName, setStudentName] = useState('');
+  const [studentEmail, setStudentEmail] = useState('');
+  const [showEmailForm, setShowEmailForm] = useState(false);
 
   const score = answers.reduce((total, answer, index) => {
     if (answer === selectedQuiz.questions[index].correctAnswer) {
@@ -146,6 +151,52 @@ const SubmitQuiz = ({ selectedQuiz, answers }) => {
   };
 
   const gradeInfo = getGrade();
+
+  const sendResults = async () => {
+    if (!studentName.trim()) {
+      alert('Please enter your name');
+      return;
+    }
+
+    setIsEmailSending(true);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/send-results`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          quizTitle: selectedQuiz.title,
+          score,
+          totalQuestions: selectedQuiz.questions.length,
+          percentage,
+          questions: selectedQuiz.questions,
+          answers,
+          studentName,
+          studentEmail,
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setEmailSent(true);
+        setShowEmailForm(false);
+        
+        if (result.message.includes('Email not configured')) {
+          alert(`📧 Email Setup Required\n\n${result.message}\n\nYour results have been saved locally for now.`);
+        } else {
+          alert('✅ Results sent successfully to bhaskarwaghmare222@gmail.com!');
+        }
+      } else {
+        throw new Error('Failed to send results');
+      }
+    } catch (err) {
+      console.error('Email error:', err);
+      alert('Failed to send results. Please check if the server is running.');
+    } finally {
+      setIsEmailSending(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
@@ -228,7 +279,7 @@ const SubmitQuiz = ({ selectedQuiz, answers }) => {
                         <div className="flex-1 min-w-0">
                           <p className="font-semibold text-slate-800 mb-3 text-sm leading-tight">{question.question}</p>
                           
-                          <div className="space-y-2">
+                          <div className="space-y-3">
                             <div className="flex flex-col gap-1">
                               <span className="text-xs font-medium text-slate-600">Your answer:</span>
                               <span className={`inline-block px-3 py-1 rounded-lg font-medium text-sm ${
@@ -248,6 +299,14 @@ const SubmitQuiz = ({ selectedQuiz, answers }) => {
                                 </span>
                               </div>
                             )}
+
+                            {/* Show explanation if available */}
+                            {question.explanation && (
+                              <div className="mt-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
+                                <span className="text-xs font-medium text-slate-600 block mb-2">Explanation:</span>
+                                <p className="text-xs text-slate-700 leading-relaxed">{question.explanation}</p>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -259,6 +318,55 @@ const SubmitQuiz = ({ selectedQuiz, answers }) => {
           </div>
         </div>
 
+        {/* Email Form Modal */}
+        {showEmailForm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+            <div className="bg-white rounded-2xl p-6 w-full max-w-md">
+              <h3 className="text-xl font-bold text-slate-800 mb-4">Send Results via Email</h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Your Name *</label>
+                  <input
+                    type="text"
+                    value={studentName}
+                    onChange={(e) => setStudentName(e.target.value)}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter your name"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Your Email (optional)</label>
+                  <input
+                    type="email"
+                    value={studentEmail}
+                    onChange={(e) => setStudentEmail(e.target.value)}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter your email (you'll receive a copy)"
+                  />
+                </div>
+                <p className="text-sm text-slate-600">
+                  Results will be sent to: <strong>bhaskarwaghmare222@gmail.com</strong>
+                </p>
+                <div className="flex gap-3 pt-4">
+                  <button
+                    onClick={() => setShowEmailForm(false)}
+                    className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={sendResults}
+                    disabled={isEmailSending}
+                    className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors disabled:opacity-50"
+                  >
+                    {isEmailSending ? 'Sending...' : 'Send Results'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Full Width Action Buttons */}
         <div className="mt-8 flex justify-center gap-4">
           <button
@@ -269,6 +377,17 @@ const SubmitQuiz = ({ selectedQuiz, answers }) => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
             Back to Home
+          </button>
+
+          <button
+            onClick={() => setShowEmailForm(true)}
+            disabled={emailSent}
+            className="px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl transition-colors shadow-lg disabled:opacity-50"
+          >
+            <svg className="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            {emailSent ? 'Results Sent!' : 'Send Results'}
           </button>
 
           <button
